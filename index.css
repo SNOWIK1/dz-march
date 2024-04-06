@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("space-back.png");
+    font-family: monospace;
+}
+
+.btn {
+    width: 250px;
+    height: 60px;
+    margin: auto;
+    text-align: center;
+    background-color: rgb(89, 89, 89);
+    border-radius: 15px;
+    font-size: 3rem;
+}
+
+.btn:hover {
+    animation-name: grow;
+    animation-duration: 0.1s;
+    animation-fill-mode: forwards;
+}
+
+#game-options, #game-start, #game-help {
+    margin-top: 10%;
+}
+
+.game-menu {
+    margin: auto;
+    background-color: rgb(31, 31, 31);
+    border: 3px solid rgb(29, 29, 29);
+    border-radius: 20px;
+    opacity: 0.7;
+    margin-top: 8%;
+    padding-top: 2%;
+    max-width: 400px;
+    min-height: 350px;
+}
+
+h1 {
+    text-align: center;
+    margin: auto;
+    margin-top: 5%;
+    color:rgb(255, 255, 255);
+    font-size: 5rem;
+}
+
+p {
+    color: rgb(255, 255, 255);
+    font-size: 1.5rem;
+    max-width: 90%;
+    text-align: center;
+}
+
+@keyframes grow {
+    to {
+        scale: 1.03;
+        background-color: rgb(173, 173, 173);
+    }
+}
