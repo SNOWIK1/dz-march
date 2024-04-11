@@ -10,8 +10,8 @@ helpBtn.addEventListener("click", (e) => {
   document.location = "/help.html";
 });
 
-// const optionsBtn = document.getElementById("game-options");
+const optionsBtn = document.getElementById("game-options");
 
-// optionsBtn.addEventListener("click", (e) => {
-//   document.location = "/game.html";
-// });
+optionsBtn.addEventListener("click", (e) => {
+  document.location = "/choose.html";
+});

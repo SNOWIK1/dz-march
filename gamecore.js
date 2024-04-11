@@ -1,5 +1,7 @@
 var game = {
   state: "start",
+  time: 10,
+  timer: setInterval(() => game.time -= 1, 1100)
 };
 
 var overlay = {
@@ -14,6 +16,9 @@ var player = {
   width: 20,
   height: 50,
   counter: 0,
+  hp: 1,
+  points: 0,
+  isDamaged: false,
 };
 var keyboard = {};
 
@@ -23,21 +28,37 @@ var enemyBullets = [];
 
 // =========== game   ============
 function updateGame() {
+  if (game.time === 0) {
+    clearInterval(game.timer)
+  }
+  document.getElementById("hp").innerHTML = "Жизни: " + player.hp
+  document.getElementById("points").innerHTML = "Очки: " + player.points;
+  document.getElementById("timer").innerHTML = "Время: " + game.time;
+
+  if (game.time <= 0) game.state = "over"
+
   if (game.state == "playing" && enemies.length == 0) {
     game.state = "won";
-    overlay.title = "SWARM DEAD";
-    overlay.subtitle = "press space to play again";
+    overlay.title = "ПОБЕДА";
+    overlay.subtitle = "Нажмите Пробел, чтобы начать заново";
     overlay.counter = 0;
+    clearInterval(game.timer)
   }
   if (game.state == "over" && keyboard[32]) {
     game.state = "start";
     player.state = "alive";
     overlay.counter = -1;
+    player.hp = 1
+    player.points = 0
+    game.time = 10
+    game.timer = setInterval(() => (game.time -= 1), 1100);
   }
   if (game.state == "won" && keyboard[32]) {
     game.state = "start";
+    game.time = 10
     player.state = "alive";
     overlay.counter = -1;
+    game.timer = setInterval(() => (game.time -= 1), 1100);
   }
 
   if (overlay.counter >= 0) {
@@ -45,8 +66,8 @@ function updateGame() {
   }
 }
 function updatePlayer() {
-  if (player.state == "dead") return;
-
+  if (player.state === "dead") return;
+  if (player.isDamaged) player.isDamaged = false
   //left arrow
   if (keyboard[37]) {
     player.x -= 10;
@@ -69,17 +90,29 @@ function updatePlayer() {
     keyboard.fired = false;
   }
 
-  if (player.state == "hit") {
+  if (player.hp === 0  || game.state === "over") {
     player.counter++;
-    if (player.counter >= 40) {
       player.counter = 0;
       player.state = "dead";
       game.state = "over";
-      overlay.title = "GAME OVER";
-      overlay.subtitle = "press space to play again";
+      overlay.title = "ПОМЕР";
+      overlay.subtitle = "Нажмите Пробел, чтобы начать заново";
       overlay.counter = 0;
-    }
   }
+}
+
+function firePlayerBullet() {
+  // создаём новую пулю
+  playerBullets.push({
+    x: player.x,
+    x: player.x + 14,
+    y: player.y - 5,
+    width: 10,
+    height: 10,
+    width: 20,
+    height: 20,
+    counter: 0,
+  });
 }
 
 function updatePlayerBullets() {
@@ -172,17 +205,22 @@ function checkCollisions() {
         bullet.state = "hit";
         enemy.state = "hit";
         enemy.counter = 0;
+        player.points += 5
       }
     }
   }
 
-  if (player.state == "hit" || player.state == "dead") return;
-  for (var i in enemyBullets) {
-    var bullet = enemyBullets[i];
-    if (collided(bullet, player)) {
-      bullet.state = "hit";
-      player.state = "hit";
-      player.counter = 0;
+  if (player.state == "dead") return;
+
+  for (const bullet of enemyBullets) {
+    if (!player.isDamaged) {
+      if (collided(bullet, player)) {
+        player.isDamaged = true
+        bullet.state = "hit";
+        player.state = "hit";
+        player.counter = 0;
+        player.hp--;
+      }
     }
   }
 }

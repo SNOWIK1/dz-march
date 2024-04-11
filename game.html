@@ -5,13 +5,41 @@
     <title>Game</title>
 </head>
 
-<body>
-    <h1>Space invaders</h1>
+<style>
+    #pause {
+        max-width: 200px;
+        max-height: 200px;
+        margin-top: 20px;
+        margin-left: 20px;
+    }
 
-    <canvas id="canvas" width="600" height="400"></canvas>
+    #pause:hover {
+        opacity: 0.7;
+        cursor: pointer;
+    }
+
+    body {
+        display: flex;
+    }
+</style>
+
+<body>
+    <div class="game">
+        <h1>Space invaders</h1>
+
+        <canvas id="canvas" width="600" height="400"></canvas>
+        <h2 id="hp">Жизни: </h2>
+        <h2 id="points">Очки: </h2>
+    </div>
+    <div class="pause"><img id="pause" src="https://cdn-icons-png.flaticon.com/128/8029/8029489.png" alt="pause-icon"></div>
+    <h2 id="timer">Время: 10</h2>
     <script src='gamecore.js'></script>
 
     <script>
+
+        document.getElementById("pause").addEventListener("click", () => {
+            alert("Paused")
+        })
 
         var can = document.getElementById("canvas");
         var c = can.getContext('2d');
@@ -27,7 +55,7 @@
 
         function loadResources() {
             ship_image = new Image();
-            ship_image.src = "https://webref.ru/assets/images/books/canvasdeepdive/hunter1.png";
+            ship_image.src = JSON.parse(localStorage.getItem("ship"))
 
             bomb_image = new Image();
             bomb_image.src = "https://webref.ru/assets/images/books/canvasdeepdive/bomb.png";
@@ -48,7 +76,7 @@
             updatePlayerBullets();
             updateEnemyBullets();
 
-            checkCollisions();
+            checkCollisions()
 
             drawBackground(c);
             drawEnemies(c);
@@ -75,10 +103,11 @@
         function drawPlayer(c) {
             if (player.state == "dead") return;
 
-            if (player.state == "hit") {
+            if (player.hp === 0) {
                 drawPlayerExplosion(c);
                 return;
             }
+
             c.drawImage(ship_image,
                 25, 1, 23, 23, //src coords
                 player.x, player.y, player.width, player.height //dst coords

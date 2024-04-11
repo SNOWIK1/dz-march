@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ship</title>
+    <link rel="stylesheet" href="./index.css">
+    <script src="./gamecore.js"></script>
+</head>
+<body>
+    <h1>Выбор корабля</h1>
+    <div class="choose-block">
+        <input type="radio" class="radio-ship" name="ship" id="astero" value="http://game.vseverske.ru/ship01.png">
+        <label for="astero"><img src="http://game.vseverske.ru/ship01.png" alt="astero"></label>
+        
+        <input type="radio" class="radio-ship" checked name="ship" id="hunter" value="https://webref.ru/assets/images/books/canvasdeepdive/hunter1.png">
+        <label for="hunter"><img src="https://webref.ru/assets/images/books/canvasdeepdive/hunter1.png" alt="hunter"></label>
+
+        <button class="back">Назад</button>
+    </div>
+
+    <script>
+        const ships = document.getElementsByClassName("radio-ship")
+        const btn = document.getElementsByClassName("back")[0]
+        btn.addEventListener("click", () => {
+            window.location = "/index.html"
+        })
+
+        const chosenShip = JSON.parse(localStorage.getItem("ship"))
+
+        for (const ship of ships) {
+            if (chosenShip && ship.value === chosenShip) {
+                ship.checked = true
+            }
+
+            ship.addEventListener("change", (e) => {
+                if (e.target.checked) {
+                    player.iconPath = e.target.value
+                    localStorage.removeItem("ship")
+                    localStorage.setItem("ship", JSON.stringify(player.iconPath))
+                }
+            })
+        }
+    </script>
+</body>
+</html>
